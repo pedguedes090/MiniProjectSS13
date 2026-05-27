@@ -29,4 +29,17 @@ public class EmployeeService {
             return new ArrayList<>(employees);
         }
     }
+
+    // TASK 2 Tìm nhân viên theo ID
+    public Employee getById(Long id) {
+        synchronized (employees) {
+            return employees.stream()
+                    .filter(e -> e.getId().equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> {
+                        log.warn("Không tìm thấy nhân viên với id: {}", id);
+                        return new RuntimeException("Không tìm thấy nhân viên với id: " + id);
+                    });
+        }
+    }
 }
