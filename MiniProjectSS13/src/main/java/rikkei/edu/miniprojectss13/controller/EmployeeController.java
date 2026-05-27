@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,6 +51,19 @@ public class EmployeeController {
         log.info("POST /api/employees called");
         Employee created = employeeService.addEmployee(payload);
         return ResponseEntity.status(HttpStatus.CREATED).body(created); // 201 Created
+    }
+
+    // TASK 4 Cập nhật nhân viên theo ID
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> update(@PathVariable Long id, @Valid @RequestBody Employee payload) {
+        log.info("PUT /api/employees/{} called", id);
+        try {
+            // Bỏ qua bất kỳ ID nào trong dữ liệu; ID đường dẫn là ID chính thức.
+            Employee updated = employeeService.updateEmployee(id, payload);
+            return ResponseEntity.ok(updated); // 200 OK
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
     }
 
     // TASK 5 Xóa nhân viên theo ID
