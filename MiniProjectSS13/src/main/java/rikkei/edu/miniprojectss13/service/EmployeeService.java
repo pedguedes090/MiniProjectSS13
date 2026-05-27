@@ -42,4 +42,29 @@ public class EmployeeService {
                     });
         }
     }
+
+    // TASK 3 Thêm nhân viên mới (tự sinh ID)
+    public Employee addEmployee(Employee payload) {
+        synchronized (employees) {
+            Employee created = new Employee(
+                    idGenerator.getAndIncrement(),
+                    payload.getFullName(),
+                    payload.getDepartment(),
+                    payload.getSalary()
+            );
+            employees.add(created);
+            return created;
+        }
+    }
+
+    // TASK 5 Xóa nhân viên theo ID
+    public void deleteById(Long id) {
+        synchronized (employees) {
+            boolean removed = employees.removeIf(e -> e.getId().equals(id));
+            if (!removed) {
+                log.warn("Không tìm thấy nhân viên với id: {}", id);
+                throw new RuntimeException("Không tìm thấy nhân viên với id: " + id);
+            }
+        }
+    }
 }
